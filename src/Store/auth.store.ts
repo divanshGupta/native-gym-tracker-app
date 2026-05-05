@@ -8,6 +8,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isRestoringSession: boolean;   // ← add this separate flag
   error: string | null;
   login: (data: LoginPayload) => Promise<void>;
   register: (data: RegisterPayload) => Promise<void>;
@@ -19,16 +20,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
+  isRestoringSession: true,   // ← starts true, flips false when done
   error: null,
 
   restoreSession: async () => {
-    const token = await SecureStore.getItemAsync("access_token");
-    if (!token) return;
     try {
+      const token = await SecureStore.getItemAsync("access_token");
+      if (!token) {
+        set({ isRestoringSession: false });   // ← no token, go to login
+        return;
+      }
       const { data } = await authApi.me();
-      set({ user: data, isAuthenticated: true });
+      set({ user: data, isAuthenticated: true, isRestoringSession: false });
     } catch {
       await SecureStore.deleteItemAsync("access_token");
+      set({ isRestoringSession: false });     // ← failed, go to login
     }
   },
 

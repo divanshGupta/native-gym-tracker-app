@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    "./*.{js,jsx,ts,tsx}",
     "./app/**/*.{js,jsx,ts,tsx}", 
     "./src/**/*.{js,jsx,ts,tsx}"
   ],
@@ -8,10 +9,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#E85D04",    // Gym orange
+        primary: "#E85D04",
         surface: "#1A1A2E",
-        card: "#16213E",
-        muted: "#6B7280",
+        card:    "#16213E",
+        muted:   "#6B7280",
       },
     },
   },
