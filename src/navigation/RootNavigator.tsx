@@ -10,20 +10,18 @@ import { ActivityIndicator, View } from "react-native";
 const Stack = createNativeStackNavigator();
 
 export const RootNavigator = () => {
-  const { isAuthenticated, isRestoringSession, restoreSession } = useAuthStore();
+  const { isAuthenticated, isLoading, restoreSession } = useAuthStore();
 
   useEffect(() => { restoreSession(); }, []);
 
-  // Show spinner only while checking stored token
-  if (isRestoringSession) {
+  if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#fff" }}>
-        <ActivityIndicator color="#4F46E5" size="large" />
+      <View className="flex-1 items-center justify-center bg-surface">
+        <ActivityIndicator color="#E85D04" size="large" />
       </View>
     );
   }
 
-  // Once resolved — go to Login or Main
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
